@@ -22,6 +22,12 @@
     <ClCompile Include="..\src\Camera.cpp">
       <Filter>Source Files\Objects</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Image.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="C:\Users\User\source\repos\Project03\Project03\include\Cube.h">
@@ -38,6 +44,15 @@
     </ClInclude>
     <ClInclude Include="..\include\Camera.h">
       <Filter>Header Files\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Lightning.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Image.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Texture.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -65,6 +80,18 @@
       <Filter>Source Files\Shaders</Filter>
     </None>
     <None Include="assets\Shaders\BasicShader.vert">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="assets\Shaders\LightShader.vert">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="assets\Shaders\LightShader.frag">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="assets\Shaders\LightningShader.vert">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="assets\Shaders\LightningShader.frag">
       <Filter>Source Files\Shaders</Filter>
     </None>
   </ItemGroup>

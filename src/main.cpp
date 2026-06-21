@@ -12,6 +12,8 @@
 
 #include "Shader.h"
 #include "Camera.h"
+#include "Texture.h"
+#include "Lightning.h"
 #include "Cube.h"
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
@@ -30,13 +32,16 @@ bool first_mouse = true;
 float lastX = window_width / 2;
 float lastY = window_height / 2;
 
+float x_mouse = 0.0f;
+float y_mouse = 0.0f;
+
 Camera cam(glm::vec3(0.0f, 0.0f, 2.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0, 1.0f, 0.0));
 
 int main() {
 
 	glfwInit();
 
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);  
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
@@ -60,8 +65,40 @@ int main() {
 	//Objects
 
 	Cube cb(glm::vec3(0.0, 0.0, 0.0), glm::vec3(1.0f, 1.0f, 1.0f));
+	Cube light(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.3f, 0.3f, 0.3f));
+
+	// Textures
+
+	unsigned int baldosas = load_texture("assets/Textures/baldosas.jpg");
+	unsigned int baldosas_spec = load_texture("assets/Textures/baldosas-spec.jpg");
+
+	//Lightning
+
+	glm::vec3 sun_light_color = glm::vec3(0.6f, 0.8f, 0.5f);
+	glm::vec3 point_light_color = glm::vec3(0.6f, 0.8f, 0.5f);
+
+	DirectionalLight sun_light = {
+				glm::vec3(0.0f, 0.0f, 0.0f),
+
+				sun_light_color * 0.7f,
+				sun_light_color,
+				glm::vec3(1.0f, 1.0f, 1.0f)
+	};
+
+	PointLight point_light = {
+				glm::vec3(0.0f, 0.0f, 0.0f),
+
+				sun_light_color * 0.7f,
+				sun_light_color,
+				glm::vec3(1.0f, 1.0f, 1.0f)
+	};
+
+
+	//Materials
+
 
 	//Coordinate System
+
 	glm::mat4 model = glm::mat4(1.0);
 
 	glm::mat4 view = glm::mat4(1.0);
@@ -73,6 +110,16 @@ int main() {
 	//Shaders
 
 	Shader basic_shader("assets/Shaders/BasicShader.vert", "assets/Shaders/BasicShader.frag");
+	Shader lightning_shader("assets/Shaders/LightningShader.vert", "assets/Shaders/LightningShader.frag");
+	Shader light_shader("assets/Shaders/LightShader.vert", "assets/Shaders/LightShader.frag");
+
+	lightning_shader.use();
+	lightning_shader.setInt("tex0", 0);
+	lightning_shader.setVec3("directional.ambient", sun_light.ambient);
+
+	//Motor configs
+
+	glEnable(GL_DEPTH_TEST);
 
 	while (!glfwWindowShouldClose(window)) {
 		//Procesamiento de entrada
@@ -85,19 +132,39 @@ int main() {
 
 		//Renderizado
 
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearColor(0.0f, 0.01f, 0.09f, 1.0f);
 
 		view = cam.lookAt();
 
-		basic_shader.use();
+		lightning_shader.use();
+
+		activate_texture(baldosas, GL_TEXTURE0);
+
+		model = glm::mat4(1.0);
 
 		cb.bindVAO();
 		cb.draw();
 
-		basic_shader.setMat4("model", model);
-		basic_shader.setMat4("view", view);
-		basic_shader.setMat4("projection", projection);
+		lightning_shader.setMat4("model", model);
+		lightning_shader.setMat4("view", view);
+		lightning_shader.setMat4("projection", projection);
+
+
+		//-------------------------Light
+
+		light_shader.use();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, light.pos);
+		model = glm::scale(model, light.size);
+
+		light.bindVAO();
+		light.draw();
+
+		light_shader.setMat4("model", model);
+		light_shader.setMat4("view", view);
+		light_shader.setMat4("projection", projection);
 
 		//Obtener eventos e intercambiar buffers
 		glfwPollEvents();
@@ -140,5 +207,7 @@ void processMouse(GLFWwindow* window, double xpos, double ypos) {
 	lastX = x;
 	lastY = y;
 
+	x_mouse = xoffset;
+	y_mouse = yoffset;
 	cam.process_mouse(xoffset, yoffset);
 }

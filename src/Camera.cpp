@@ -30,14 +30,17 @@ void Camera::process_mouse(float xpos, float ypos) {
 void Camera::process_keyboard(MOVES move, float deltaTime) {
 	float move_speed = this->speed * deltaTime;
 
+	glm::vec3 flat_front = glm::normalize(glm::vec3(this->front.x, 0.0f, this->front.z));
+	glm::vec3 flat_right = glm::normalize(glm::vec3(this->right.x, 0.0f, this->right.z));
+
 	if (move == FRONT)
-		this->pos += this->front * move_speed;
+		this->pos += flat_front * move_speed;
 	if (move == BACK)
-		this->pos -= this->front * move_speed;
+		this->pos -= flat_front * move_speed;
 	if (move == RIGHT)
-		this->pos += this->right * move_speed;
+		this->pos += flat_right * move_speed;
 	if (move == LEFT)
-		this->pos -= this->right * move_speed;
+		this->pos -= flat_right * move_speed;
 }
 
 void Camera::update_vectors() {

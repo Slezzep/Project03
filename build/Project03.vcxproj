@@ -417,12 +417,17 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Camera.h" />
+    <ClInclude Include="..\include\Image.h" />
+    <ClInclude Include="..\include\Lightning.h" />
     <ClInclude Include="..\include\Shader.h" />
+    <ClInclude Include="..\include\Texture.h" />
     <ClInclude Include="C:\Users\User\source\repos\Project03\Project03\include\Cube.h" />
     <ClInclude Include="C:\Users\User\source\repos\Project03\Project03\include\Object.h" />
     <ClInclude Include="C:\Users\User\source\repos\Project03\Project03\include\Shapes.h" />
     <ClCompile Include="..\src\Camera.cpp" />
+    <ClCompile Include="..\src\Image.cpp" />
     <ClCompile Include="..\src\Shader.cpp" />
+    <ClCompile Include="..\src\Texture.cpp" />
     <ClCompile Include="C:\Users\User\source\repos\Project03\Project03\src\Cube.cpp" />
     <ClCompile Include="C:\Users\User\source\repos\Project03\Project03\src\Object.cpp" />
     <ClCompile Include="C:\Users\User\source\repos\Project03\Project03\src\Shapes.cpp" />
@@ -432,6 +437,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   <ItemGroup>
     <None Include="assets\Shaders\BasicShader.frag" />
     <None Include="assets\Shaders\BasicShader.vert" />
+    <None Include="assets\Shaders\LightningShader.frag" />
+    <None Include="assets\Shaders\LightningShader.vert" />
+    <None Include="assets\Shaders\LightShader.frag" />
+    <None Include="assets\Shaders\LightShader.vert" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="C:\Users\User\source\repos\Project03\Project03\build\ZERO_CHECK.vcxproj">
