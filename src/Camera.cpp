@@ -34,7 +34,7 @@ void Camera::process_keyboard(MOVES move, float deltaTime) {
 	glm::vec3 flat_right = glm::normalize(glm::vec3(this->right.x, 0.0f, this->right.z));
 
 	if (move == FRONT)
-		this->pos += flat_front * move_speed;
+		this->pos += front * move_speed;
 	if (move == BACK)
 		this->pos -= flat_front * move_speed;
 	if (move == RIGHT)

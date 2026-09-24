@@ -1,4 +1,5 @@
-//Silver Template
+//<<<>>>
+//Silver (Slezzep) Template <>
 
 #define	WIDTH_		800
 #define	HEIGHT_		600
@@ -70,7 +71,7 @@ int main() {
 	// Textures
 
 	unsigned int baldosas = load_texture("assets/Textures/baldosas.jpg");
-	unsigned int baldosas_spec = load_texture("assets/Textures/baldosas-spec.jpg");
+	unsigned int baldosas_spec = load_texture("assets/Textures/baldosas-spec.png");
 
 	//Lightning
 
@@ -78,7 +79,7 @@ int main() {
 	glm::vec3 point_light_color = glm::vec3(0.6f, 0.8f, 0.5f);
 
 	DirectionalLight sun_light = {
-				glm::vec3(0.0f, 0.0f, 0.0f),
+				glm::vec3(1.0f, -1.0f, 0.5f),
 
 				sun_light_color * 0.7f,
 				sun_light_color,
@@ -114,8 +115,11 @@ int main() {
 	Shader light_shader("assets/Shaders/LightShader.vert", "assets/Shaders/LightShader.frag");
 
 	lightning_shader.use();
-	lightning_shader.setInt("tex0", 0);
-	lightning_shader.setVec3("directional.ambient", sun_light.ambient);
+	lightning_shader.setInt("diffuse_0", 0);
+	lightning_shader.setInt("specular_0", 1);
+	lightning_shader.setVec3("dirLight.direction", sun_light.direction);
+	lightning_shader.setVec3("dirLight.ambient", sun_light.ambient);
+	lightning_shader.setVec3("dirLight.diffuse", sun_light.diffuse);
 
 	//Motor configs
 
@@ -132,20 +136,28 @@ int main() {
 
 		//Renderizado
 
+
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearColor(0.0f, 0.01f, 0.09f, 1.0f);
 
 		view = cam.lookAt();
 
+		activate_texture(baldosas, GL_TEXTURE0);
+		activate_texture(baldosas_spec, GL_TEXTURE1);
+
 		lightning_shader.use();
 
-		activate_texture(baldosas, GL_TEXTURE0);
-
 		model = glm::mat4(1.0);
+
+		glm::mat3 normal_matrix = glm::transpose(glm::inverse(model));
 
 		cb.bindVAO();
 		cb.draw();
 
+		lightning_shader.setVec3("dirLight.direction", glm::vec3(glm::vec4(sun_light.direction, 1.0f)));
+		lightning_shader.setVec3("viewPos", cam.pos);
+
+		lightning_shader.setMat3("normal_matrix", normal_matrix);
 		lightning_shader.setMat4("model", model);
 		lightning_shader.setMat4("view", view);
 		lightning_shader.setMat4("projection", projection);
